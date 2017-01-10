@@ -31,14 +31,17 @@ function updateList(rows) {
     "<th>Option</th></tr>";
   for (var i = 0; i < limit; i++) {
     var current = JSON.parse(localStorage.getItem(localStorage.key(i)));
-    html += "<tr><td>" + current.firstname + "</td>" +
+    html += "<tr id=" + localStorage.key(i) + "><td>" + current.firstname + "</td>" +
       "<td>" + current.lastname + "</td>" +
       "<td>" + current.email + "</td>" +
       "<td>" + current.location + "</td>" +
       "<td>" + current.phone + "</td>" +
       "<td>" + current.current_class + "</td>" +
       "<td>" + current.address.communication + "<br />" +
-      current.address.permanent + "</td><tr>";
+      current.address.permanent + "</td>" +
+      '<td><input type="button" value="Detail" >' +
+      '<input type="button" value="Edit" >' +
+      '<input type="button" value="Delete" ></td><tr>';
   }
   html += "<table>";
   $("#list").html(html);
