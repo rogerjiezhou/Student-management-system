@@ -9,7 +9,6 @@ $(document).ready(function() {
       if (data) {
         if (typeof(Storage) !== "undefined") {
           var len = data.length;
-          storageSize = len;
           for (var i = 0; i < len; i++)
             localStorage.setItem("array_" + i, JSON.stringify(data[i]))
         }
@@ -20,7 +19,7 @@ $(document).ready(function() {
 });
 
 function updateList(rows) {
-  limit = rows > storageSize ? storageSize : rows;
+  limit = rows > localStorage.length ? localStorage.length : rows;
   html = '<table id="print">';
   html += "<tr><th>Firstname</th>" +
     "<th>Lastname</th>" +
@@ -31,7 +30,7 @@ function updateList(rows) {
     "<th>Address</th>" +
     "<th>Option</th></tr>";
   for (var i = 0; i < limit; i++) {
-    var current = JSON.parse(localStorage.getItem("array_" + i));
+    var current = JSON.parse(localStorage.getItem(localStorage.key(i)));
     html += "<tr><td>" + current.firstname + "</td>" +
       "<td>" + current.lastname + "</td>" +
       "<td>" + current.email + "</td>" +
