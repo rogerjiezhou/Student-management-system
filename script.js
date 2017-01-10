@@ -1,4 +1,4 @@
-var storageSize;
+var storageCount;
 var limit;
 
 $(document).ready(function() {
@@ -50,3 +50,8 @@ function updateList(rows) {
 $('#limitRows').on('change', function() {
   updateList(this.value);
 });
+
+$(document).on('click', 'input[class="delete"]', function() {
+  localStorage.removeItem($(this).closest('tr').attr("id"));
+  updateList($('#limitRows').val());
+})
