@@ -44,3 +44,7 @@ function updateList(rows) {
   html += "<table>";
   $("#list").html(html);
 }
+
+$('#limitRows').on('change', function() {
+  updateList(this.value);
+});
