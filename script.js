@@ -1,6 +1,9 @@
+var storageLength;
 var storageCount;
-var limit;
+var limitPrev;
+var limitNow;
 var students;
+var table = $("#print");
 
 $(document).ready(function() {
   jQuery.ajax({
@@ -9,10 +12,11 @@ $(document).ready(function() {
     success: function(data) {
       if (data) {
         if (typeof(Storage) !== "undefined") {
-          var len = data.length;
+          var storageLength = data.length;
+          console.log(storageLength);
           localStorage.setItem("students", JSON.stringify(data));
-          students = JSON.parse(localStorage.getItem("students"));
-          updateList(10);
+          limitPrev = 10;
+          updateList(limitPrev);
         }
       } 
     }
@@ -20,7 +24,8 @@ $(document).ready(function() {
 });
 
 function updateList(rows) {
-  limit = rows > students.length ? students.length : rows;
+  students = JSON.parse(localStorage.getItem("students"));
+  var limit = rows > students.length ? students.length : rows;
   html = '<table id="print">';
   html += "<tr><th>Firstname</th>" +
     "<th>Lastname</th>" +
@@ -42,21 +47,37 @@ function updateList(rows) {
       current.address.permanent + "</td>" +
       '<td><input type="button" value="Detail" class="detail">' +
       '<input type="button" value="Edit" class="edit" >' +
-      '<input type="button" value="Delete" class="delete" ></td><tr>';
+      '<input type="button" value="Delete" class="delete" ></td></tr>';
   }
   html += "<table>";
   $("#list").html(html);
 }
 
 $('#limitRows').on('change', function() {
-  updateList(this.value);
+  limitNow = this.value;
+
+  limitNow = Number(limitNow);
+  limitPrev = Number(limitPrev);
+  
+  if(limitNow > limitPrev) {
+    while(limitPrev < limitNow) {
+      appendRow(limitPrev++);
+    }
+  } 
+  else {
+    console.log("small");
+    while(limitPrev > limitNow) {
+      $("#"+--limitPrev).remove();
+    }
+  }
+  limitPrev = limitNow;
 });
 
 $(document).on('click', 'input[class="detail"]', function() {
-  $("#myForm").css("display", "block");
+  // $("#myForm").css("display", "block");
   var userKey = $(this).closest('tr').attr("id");
-  fetchUser(userKey);
-  disableInput();
+  // fetchUser(userKey);
+  // disableInput();
 })
 
 $(document).on('click', 'input[value="Close"]', function() {
@@ -68,9 +89,37 @@ $(document).on('click', 'input[value="Close"]', function() {
   // })
 
 $(document).on('click', 'input[class="delete"]', function() {
-  localStorage.removeItem($(this).closest('tr').attr("id"));
-  updateList($('#limitRows').val());
+  var id = $(this).closest('tr').attr("id");
+  $(this).closest('tr').remove();   //remove row
+  reorganizeRow(Number(id) + 1);    //reorganize row id
+  students.splice(id,1);            //delete student from object array
+  appendRow($('#limitRows').val() - 1);     //append row to the last
+  updateStorage(students);                          //udpdate localStorage
 })
+
+function appendRow(rowId) {
+  var current = students[rowId];
+  $("#print").append(
+    "<tr id=" + rowId + "><td>" + current.firstname + "</td>" +
+      "<td>" + current.lastname + "</td>" +
+      "<td>" + current.email + "</td>" +
+      "<td>" + current.location + "</td>" +
+      "<td>" + current.phone + "</td>" +
+      "<td>" + current.current_class + "</td>" +
+      "<td>" + current.address.communication + "<br />" +
+      current.address.permanent + "</td>" +
+      '<td><input type="button" value="Detail" class="detail">' +
+      '<input type="button" value="Edit" class="edit" >' +
+      '<input type="button" value="Delete" class="delete" ></td></tr>')
+}
+
+function reorganizeRow(id) {
+  var last = $('#limitRows').val();
+  while(id < last) {
+    $("#"+id).attr("id", id-1);
+    id++;
+  }
+}
 
 function fetchUser(userKey) {
   var user = JSON.parse(localStorage.getItem(userKey));
@@ -93,4 +142,8 @@ function disableInput() {
   $("#currentClass").prop('disabled', true);
   $("#address").prop('disabled', true);
   $("#marks").prop('disabled', true);
+}
+
+function updateStorage(students) {
+  localStorage.setItem("students", JSON.stringify(students));
 }
