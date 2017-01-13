@@ -119,6 +119,7 @@ $(document).on('click', 'input[class="detail"]', function() {
 
 $(document).on('click', 'input[class="edit"]', function() {
   var id = $(this).closest('tr').attr("id");
+  $("#editForm").toggle();
   $("#myForm").css("display", "block");
   $("#submit").attr("value", "Update");
   $("#submit").attr("class", id);
@@ -129,6 +130,7 @@ $(document).on('click', 'input[value="Update"]', function() {
   var id = $(this).attr("class");
   submitEditForm(Number(id))
   $("#myForm").css("display", "none");
+  $("#editForm").toggle();
   updateList($('#limitRows').val())
 });
 

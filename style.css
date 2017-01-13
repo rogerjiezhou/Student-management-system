@@ -23,7 +23,7 @@ th, td {
 }
 
 .navbar {
-  height: 30px;
+  height: 60px;
   margin-bottom: 10px;
 }
 
@@ -31,7 +31,7 @@ th, td {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+    padding-top: 50px; /* Location of the box */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -47,6 +47,14 @@ th, td {
     padding: 30px;
     border: 1px solid #888;
     width: 80%;
+}
+
+#editForm {
+  display: none;
+}
+
+#addNewForm {
+  display: none;
 }
 
 .detailRow {
