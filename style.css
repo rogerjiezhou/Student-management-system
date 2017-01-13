@@ -23,7 +23,7 @@ th, td {
 }
 
 .form {
-    /* display: none; */ /* Hidden by default */
+    display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     padding-top: 100px; /* Location of the box */
@@ -44,8 +44,18 @@ th, td {
     width: 80%;
 }
 
+.detailRow {
+  height: 100px;
+}
+
+.detailRow input {
+  text-align: center;
+  width: 100px;
+  margin: 20px;
+}
 
 .title {
 
   width: 30px;
 }
+

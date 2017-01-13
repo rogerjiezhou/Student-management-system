@@ -74,10 +74,26 @@ $('#limitRows').on('change', function() {
 });
 
 $(document).on('click', 'input[class="detail"]', function() {
-  // $("#myForm").css("display", "block");
-  var userKey = $(this).closest('tr').attr("id");
-  // fetchUser(userKey);
-  // disableInput();
+  var row = $(this).closest('tr');
+  var id = row.attr("id");
+  if(row.next().attr("class") == "detailRow"){
+    row.next().remove();
+  }else {
+    row.after('<tr class="detailRow" ><td colspan="100%">' +
+              '<label class="title">English</label>' +
+              '<input type="text" id="mark1" disabled="true">' +
+              '<label class="title">Science</label>' +
+              '<input type="text" id="mark2" disabled="true">' +
+              '<label class="title">Computer</label>' +
+              '<input type="text" id="mark3" disabled="true">' +
+              '<label class="title">Hardwares</label>' +
+              '<input type="text" id="mark4" disabled="true"></td></tr>' );
+    students = JSON.parse(localStorage.getItem("students"));
+    $("#mark1").val(students[id].marks.english);
+    $("#mark2").val(students[id].marks.science);
+    $("#mark3").val(students[id].marks.computers);
+    $("#mark4").val(students[id].marks.hardware);
+  }
 })
 
 $(document).on('click', 'input[value="Close"]', function() {
@@ -123,13 +139,6 @@ function reorganizeRow(id) {
 
 function fetchUser(userKey) {
   var user = JSON.parse(localStorage.getItem(userKey));
-  $("#firstname").val(user.firstname);
-  $("#lastname").val(user.lastname);
-  $("#email").val(user.email);
-  $("#location").val(user.location);
-  $("#phone").val(user.phone);
-  $("#currentClass").val(user.current_class);
-  $("#address").val(user.address);
   $("#marks").val(user.marks);
 }
 
