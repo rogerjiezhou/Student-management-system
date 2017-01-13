@@ -254,6 +254,19 @@ function submitAddNewForm(id) {
   updateStorage(students);
 }
 
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.value += "," + data;
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
 function updateStorage(students) {
   localStorage.setItem("students", JSON.stringify(students));
 }
