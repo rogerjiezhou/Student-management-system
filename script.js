@@ -67,7 +67,9 @@ $('#limitRows').on('change', function() {
   else {
     console.log("small");
     while(limitPrev > limitNow) {
-      $("#"+--limitPrev).remove();
+      limitPrev--;
+      $("#"+limitPrev).remove();
+      $("#detailRow"+limitPrev).remove();
     }
   }
   limitPrev = limitNow;
@@ -79,20 +81,20 @@ $(document).on('click', 'input[class="detail"]', function() {
   if(row.next().attr("class") == "detailRow"){
     row.next().remove();
   }else {
-    row.after('<tr class="detailRow" ><td colspan="100%">' +
+    row.after('<tr id="detailRow' + id + '" class= "detailRow"><td colspan="100%">' +
               '<label class="title">English</label>' +
-              '<input type="text" id="mark1" disabled="true">' +
+              '<input type="text" id="row' + id + 'mark1" disabled="true">' +
               '<label class="title">Science</label>' +
-              '<input type="text" id="mark2" disabled="true">' +
+              '<input type="text" id="row' + id + 'mark2" disabled="true">' +
               '<label class="title">Computer</label>' +
-              '<input type="text" id="mark3" disabled="true">' +
+              '<input type="text" id="row' + id + 'mark3" disabled="true">' +
               '<label class="title">Hardwares</label>' +
-              '<input type="text" id="mark4" disabled="true"></td></tr>' );
+              '<input type="text" id="row' + id + 'mark4" disabled="true"></td></tr>' );
     students = JSON.parse(localStorage.getItem("students"));
-    $("#mark1").val(students[id].marks.english);
-    $("#mark2").val(students[id].marks.science);
-    $("#mark3").val(students[id].marks.computers);
-    $("#mark4").val(students[id].marks.hardware);
+    $("#row" + id + "mark1").val(students[id].marks.english);
+    $("#row" + id + "mark2").val(students[id].marks.science);
+    $("#row" + id + "mark3").val(students[id].marks.computers);
+    $("#row" + id + "mark4").val(students[id].marks.hardware);
   }
 })
 
@@ -105,8 +107,12 @@ $(document).on('click', 'input[value="Close"]', function() {
   // })
 
 $(document).on('click', 'input[class="delete"]', function() {
-  var id = $(this).closest('tr').attr("id");
-  $(this).closest('tr').remove();   //remove row
+  var row = $(this).closest('tr');
+  var id = row.attr("id");
+  if(row.next().attr("class") == "detailRow"){ //remove detail row
+    row.next().remove(); 
+  }
+  row.remove();   //remove row
   reorganizeRow(Number(id) + 1);    //reorganize row id
   students.splice(id,1);            //delete student from object array
   appendRow($('#limitRows').val() - 1);     //append row to the last
@@ -137,21 +143,10 @@ function reorganizeRow(id) {
   }
 }
 
-function fetchUser(userKey) {
+function fetchStudent(userKey) {
   var user = JSON.parse(localStorage.getItem(userKey));
-  $("#marks").val(user.marks);
 }
 
-function disableInput() {
-  $("#firstname").prop('disabled', true);
-  $("#lastname").prop('disabled', true);
-  $("#email").prop('disabled', true);
-  $("#location").prop('disabled', true);
-  $("#phone").prop('disabled', true);
-  $("#currentClass").prop('disabled', true);
-  $("#address").prop('disabled', true);
-  $("#marks").prop('disabled', true);
-}
 
 function updateStorage(students) {
   localStorage.setItem("students", JSON.stringify(students));
