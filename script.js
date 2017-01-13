@@ -10,7 +10,7 @@ function student(fn, ln, email, loc, phone, cc, addressCommu,
   addressPerm, marks1, marks2, marks3, marks4) {
   this.firstname = fn;
   this.lastname = ln;
-  this.emial = email;
+  this.email = email;
   this.location = loc;
   this.phone = phone;
   this.current_class = cc;
@@ -117,6 +117,20 @@ $(document).on('click', 'input[class="detail"]', function() {
   }
 });
 
+$(document).on('click', 'input[id="addNew"]', function() {
+  $("#addNewForm").toggle();
+  $("#myForm").css("display", "block");
+  $("#submit").attr("value", "Add");
+})
+
+$(document).on('click', 'input[value="Add"]', function() {
+  submitAddNewForm();
+  $("#myForm").css("display", "none");
+  $("#addNewForm").toggle();
+  clearBox();
+  updateList($('#limitRows').val())
+});
+
 $(document).on('click', 'input[class="edit"]', function() {
   var id = $(this).closest('tr').attr("id");
   $("#editForm").toggle();
@@ -131,6 +145,7 @@ $(document).on('click', 'input[value="Update"]', function() {
   submitEditForm(Number(id))
   $("#myForm").css("display", "none");
   $("#editForm").toggle();
+  clearBox();
   updateList($('#limitRows').val())
 });
 
@@ -189,6 +204,21 @@ function fetchStudent(id) {
   $("#marks4").val(students[id].marks.hardware);
 }
 
+function clearBox() {
+  $("#firstname").val("");
+  $("#lastname").val("");
+  $("#email").val("");
+  $("#location").val("");
+  $("#phone").val("");
+  $("#currentClass").val("");
+  $("#addressCommu").val("");
+  $("#addressPerm").val("");
+  $("#marks1").val("");
+  $("#marks2").val("");
+  $("#marks3").val("");
+  $("#marks4").val("");
+}
+
 function submitEditForm(id) {
   var loc = $("#location").val();
   var location = loc.split(",");
@@ -200,6 +230,20 @@ function submitEditForm(id) {
     $("#marks3").val(), $("#marks4").val());
   students = JSON.parse(localStorage.getItem("students"));
   students[id] = newStudent;
+  updateStorage(students);
+}
+
+function submitAddNewForm(id) {
+  var loc = $("#location").val();
+  var location = loc.split(",");
+  var newStudent = new student($("#firstname").val(), $("#lastname").val(),
+    $("#email").val(), location,
+    $("#phone").val(), $("#currentClass").val(),
+    $("#addressCommu").val(), $("#addressPerm").val(),
+    $("#marks1").val(), $("#marks2").val(),
+    $("#marks3").val(), $("#marks4").val());
+  students = JSON.parse(localStorage.getItem("students"));
+  students.push(newStudent);
   updateStorage(students);
 }
 
