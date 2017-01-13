@@ -164,6 +164,13 @@ $(document).on('click', 'input[class="delete"]', function() {
   updateStorage(students); //udpdate localStorage
 });
 
+$(document).on('click', 'input[id="cancel"]', function() {
+  $("#myForm").css("display", "none");
+  $("#editForm").hide();
+  $("#addNewForm").hide()
+  clearBox();
+})
+
 function appendRow(rowId) {
   var current = students[rowId];
   $("#print").append(
