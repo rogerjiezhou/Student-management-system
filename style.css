@@ -18,7 +18,7 @@ table, th, td {
 } 
 
 th, td {
-  padding: 8px;
+  padding: 7px;
 
 }
 
@@ -56,6 +56,10 @@ th, td {
   border: 1px solid #888;
   width: 80%;
   
+}
+
+#outOfRecord {
+  display: none;
 }
 
 #submitForm {

@@ -34,7 +34,6 @@ $(document).ready(function() {
       if (data) {
         if (typeof(Storage) !== "undefined") {
           var storageLength = data.length;
-          console.log(storageLength);
           localStorage.setItem("students", JSON.stringify(data));
           limitPrev = 10;
           updateList(limitPrev);
@@ -75,6 +74,8 @@ function updateList(rows) {
 }
 
 $('#limitRows').on('change', function() {
+  
+  $("#outOfRecord").hide();
   limitNow = this.value;
 
   limitNow = Number(limitNow);
@@ -319,3 +320,15 @@ function searchList(keyword) {
 function updateStorage(students) {
   localStorage.setItem("students", JSON.stringify(students));
 }
+
+$(window).scroll(function() {
+  if($(window).scrollTop() + $(window).height() > $(document).height() - 1) {
+    students = JSON.parse(localStorage.getItem("students"));
+    if(students.length != limitPrev){
+      appendRow(limitPrev++);
+    }else {
+      $("#outOfRecord").show();
+    }
+  }
+});
+
