@@ -167,9 +167,20 @@ $(document).on('click', 'input[class="delete"]', function() {
 $(document).on('click', 'input[id="cancel"]', function() {
   $("#myForm").css("display", "none");
   $("#editForm").hide();
-  $("#addNewForm").hide()
+  $("#addNewForm").hide();
   clearBox();
-})
+});
+
+$("#search").keyup(function() {
+  if($(this).val().length !== 0) {
+    var keyword = $(this).val();
+    $("#print").remove();
+    students = JSON.parse(localStorage.getItem("students"));
+    searchList(keyword.toLowerCase());
+  }else {
+    updateList($('#limitRows').val());
+  }
+});
 
 function appendRow(rowId) {
   var current = students[rowId];
@@ -261,12 +272,50 @@ function allowDrop(ev) {
 function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
-    ev.target.value += "," + data;
+    if(ev.target.value.length == 0) {
+      ev.target.value += data;
+    } else
+      ev.target.value += "," + data;
 }
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
 }
+
+function searchList(keyword) {
+  html = '<table id="print">';
+  html += "<tr><th>Firstname</th>" +
+    "<th>Lastname</th>" +
+    "<th>Email</th>" +
+    "<th>Location</th>" +
+    "<th>Phone</th>" +
+    "<th>Current Class</th>" +
+    "<th>Address</th>" +
+    "<th>Option</th></tr>";
+  for (var i = 0; i < students.length; i++) {
+    var current = students[i];
+    if(current.firstname.toLowerCase().includes(keyword) ||
+       current.lastname.toLowerCase().includes(keyword) ||
+      current.current_class.toString().toLowerCase().includes(keyword) ||
+       current.location.toString().toLowerCase().includes(keyword) ||
+       current.phone.toLowerCase().includes(keyword)){
+      html += "<tr id=" + i + "><td>" + current.firstname + "</td>" +
+        "<td>" + current.lastname + "</td>" +
+        "<td>" + current.email + "</td>" +
+        "<td>" + current.location.toString() + "</td>" +
+        "<td>" + current.phone + "</td>" +
+        "<td>" + current.current_class + "</td>" +
+        "<td>" + current.address.communication + "<br />" +
+        current.address.permanent + "</td>" +
+        '<td><input type="button" value="Detail" class="detail">' +
+        '<input type="button" value="Edit" class="edit" >' +
+        '<input type="button" value="Delete" class="delete" ></td></tr>';
+    }  
+  }
+  html += "<table>";
+  $("#list").html(html);
+}
+
 function updateStorage(students) {
   localStorage.setItem("students", JSON.stringify(students));
 }
