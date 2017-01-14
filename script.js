@@ -3,9 +3,8 @@ var storageCount;
 var limitPrev;
 var limitNow;
 var students;
-var table = $("#print");
 
-
+//student object
 function student(fn, ln, email, loc, phone, cc, addressCommu,
   addressPerm, marks1, marks2, marks3, marks4) {
   this.firstname = fn;
@@ -26,23 +25,30 @@ function student(fn, ln, email, loc, phone, cc, addressCommu,
   }
 }
 
+//read data
 $(document).ready(function() {
-  jQuery.ajax({
-    "type": "GET",
-    "url": "data.json",
-    success: function(data) {
-      if (data) {
-        if (typeof(Storage) !== "undefined") {
-          var storageLength = data.length;
-          localStorage.setItem("students", JSON.stringify(data));
-          limitPrev = 10;
-          updateList(limitPrev);
+  limitPrev = 10;
+  if(localStorage.getItem("students") === null) {
+    jQuery.ajax({
+      "type": "GET",
+      "url": "data.json",
+      success: function(data) {
+        if (data) {
+          if (typeof(Storage) !== "undefined") {
+            var storageLength = data.length;
+            localStorage.setItem("students", JSON.stringify(data));
+            updateList(limitPrev);
+          }
         }
       }
-    }
-  });
+    });
+  }else {
+    students = JSON.parse(localStorage.getItem("students"));
+    updateList(limitPrev);
+  }
 });
 
+//refresh list
 function updateList(rows) {
   students = JSON.parse(localStorage.getItem("students"));
   var limit = rows > students.length ? students.length : rows;
@@ -95,7 +101,7 @@ $('#limitRows').on('change', function() {
   limitPrev = limitNow;
 });
 
-$(document).on('click', 'input[class="detail"]', function() {
+$(document).on('click', 'input[class="detail"]', function() {   
   var row = $(this).closest('tr');
   var id = row.attr("id");
   if (row.next().attr("class") == "detailRow") {
@@ -118,13 +124,15 @@ $(document).on('click', 'input[class="detail"]', function() {
   }
 });
 
-$(document).on('click', 'input[id="addNew"]', function() {
+//add student event
+$(document).on('click', 'input[id="addNew"]', function() {      
   $("#addNewForm").toggle();
   $("#myForm").css("display", "block");
   $("#submit").attr("value", "Add");
 })
 
-$(document).on('click', 'input[value="Add"]', function() {
+//add button event
+$(document).on('click', 'input[value="Add"]', function() {      
   submitAddNewForm();
   $("#myForm").css("display", "none");
   $("#addNewForm").toggle();
@@ -132,7 +140,8 @@ $(document).on('click', 'input[value="Add"]', function() {
   updateList($('#limitRows').val())
 });
 
-$(document).on('click', 'input[class="edit"]', function() {
+//edit button event
+$(document).on('click', 'input[class="edit"]', function() {     
   var id = $(this).closest('tr').attr("id");
   $("#editForm").toggle();
   $("#myForm").css("display", "block");
@@ -141,7 +150,8 @@ $(document).on('click', 'input[class="edit"]', function() {
   fetchStudent(id);
 })
 
-$(document).on('click', 'input[value="Update"]', function() {
+//update button event
+$(document).on('click', 'input[value="Update"]', function() { 
   var id = $(this).attr("class");
   submitEditForm(Number(id))
   $("#myForm").css("display", "none");
@@ -150,11 +160,11 @@ $(document).on('click', 'input[value="Update"]', function() {
   updateList($('#limitRows').val())
 });
 
-
-$(document).on('click', 'input[class="delete"]', function() {
+//delete button event
+$(document).on('click', 'input[class="delete"]', function() {    
   var row = $(this).closest('tr');
   var id = row.attr("id");
-  if (row.next().attr("class") == "detailRow") { //remove detail row
+  if (row.next().attr("class") == "detailRow") {      //remove detail row
     row.next().remove();
   }
   row.remove(); //remove row
@@ -172,7 +182,8 @@ $(document).on('click', 'input[id="cancel"]', function() {
   clearBox();
 });
 
-$("#search").keyup(function() {
+//search event
+$("#search").keyup(function() {                         
   if($(this).val().length !== 0) {
     var keyword = $(this).val();
     $("#print").remove();
